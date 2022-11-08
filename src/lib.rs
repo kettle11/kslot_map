@@ -1,4 +1,5 @@
 /// A data structure designed to efficiently store data with persistent IDs.
+#[derive(Clone)]
 pub struct SlotMap<T> {
     items: Vec<T>,
     item_to_indirection_index: Vec<usize>,
@@ -6,6 +7,7 @@ pub struct SlotMap<T> {
     free_indirection_indices: Vec<usize>,
 }
 
+#[derive(Clone)]
 struct Entry {
     item_index: usize,
     generation: usize,
