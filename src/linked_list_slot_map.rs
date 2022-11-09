@@ -51,7 +51,15 @@ impl<T> LinkedListSlotMap<T> {
         LinkedListSlotMapHandle(new_handle)
     }
 
-    pub fn remove(&mut self, node: LinkedListSlotMapHandle<T>) -> T {
+    /// Returns the value and the previous and next nodes, if they exist.
+    pub fn remove(
+        &mut self,
+        node: LinkedListSlotMapHandle<T>,
+    ) -> (
+        T,
+        Option<LinkedListSlotMapHandle<T>>,
+        Option<LinkedListSlotMapHandle<T>>,
+    ) {
         let node = self.slot_map.remove(node.0).unwrap();
         if let Some(previous) = node.previous {
             self.slot_map.get_mut(previous).unwrap().next = node.next;
@@ -59,7 +67,11 @@ impl<T> LinkedListSlotMap<T> {
         if let Some(next) = node.next {
             self.slot_map.get_mut(next).unwrap().previous = node.previous;
         }
-        node.value
+        (
+            node.value,
+            node.previous.map(|p| LinkedListSlotMapHandle(p)),
+            node.next.map(|p| LinkedListSlotMapHandle(p)),
+        )
     }
 
     pub fn iter(&self, start_node: LinkedListSlotMapHandle<T>) -> LinkedListSlotMapIterator<T> {
