@@ -8,6 +8,11 @@ pub struct LinkedListSlotMap<T> {
 #[derive(PartialEq, Eq)]
 pub struct LinkedListSlotMapHandle<T>(pub(crate) SlotMapHandle<Node<T>>);
 
+impl<T> LinkedListSlotMapHandle<T> {
+    pub fn inner_handle(&self) -> SlotMapHandle<Node<T>> {
+        self.0
+    }
+}
 impl<T> Clone for LinkedListSlotMapHandle<T> {
     fn clone(&self) -> Self {
         Self(self.0)
