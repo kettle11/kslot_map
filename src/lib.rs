@@ -1,3 +1,8 @@
+#[cfg(feature = "linked_list_slot_map")]
+mod linked_list_slot_map;
+#[cfg(feature = "linked_list_slot_map")]
+pub use linked_list_slot_map::*;
+
 /// A data structure designed to efficiently store data with persistent IDs.
 #[derive(Clone)]
 pub struct SlotMap<T> {

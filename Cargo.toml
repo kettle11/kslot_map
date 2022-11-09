@@ -4,4 +4,8 @@ version = "0.1.0"
 edition = "2021"
 license = "CC0-1.0"
 
+[features]
+default = ["linked_list_slot_map"]
+linked_list_slot_map = []
+
 [dependencies]
