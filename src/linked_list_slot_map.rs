@@ -89,6 +89,15 @@ impl<T> LinkedListSlotMap<T> {
         self.slot_map.get_mut(handle.0).map(|n| &mut n.value)
     }
 
+    pub fn get_previous_handle(
+        &self,
+        handle: LinkedListSlotMapHandle<T>,
+    ) -> Option<LinkedListSlotMapHandle<T>> {
+        Some(LinkedListSlotMapHandle(
+            self.slot_map.get(handle.0)?.previous?,
+        ))
+    }
+
     pub fn reverse_iter(
         &self,
         start_node: LinkedListSlotMapHandle<T>,
