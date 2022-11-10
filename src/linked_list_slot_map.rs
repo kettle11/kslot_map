@@ -107,6 +107,17 @@ impl<T> LinkedListSlotMap<T> {
             current_node: Some(start_node.0),
         }
     }
+
+    /// Reverse-iterate the linked-list and remove the values at the same time.
+    pub fn reverse_remove_iter(
+        &mut self,
+        start_node: LinkedListSlotMapHandle<T>,
+    ) -> RevRemoveLinkedListSlotMapIterator<T> {
+        RevRemoveLinkedListSlotMapIterator {
+            linked_list_slot_map: self,
+            current_node: Some(start_node.0),
+        }
+    }
 }
 
 pub struct LinkedListSlotMapIterator<'a, T> {
@@ -135,6 +146,25 @@ impl<'a, T> Iterator for RevLinkedListSlotMapIterator<'a, T> {
         let node = self.linked_list_slot_map.slot_map.get(node_handle).unwrap();
         self.current_node = node.previous;
         Some((&node.value, LinkedListSlotMapHandle(node_handle)))
+    }
+}
+
+pub struct RevRemoveLinkedListSlotMapIterator<'a, T> {
+    linked_list_slot_map: &'a mut LinkedListSlotMap<T>,
+    current_node: Option<SlotMapHandle<Node<T>>>,
+}
+impl<'a, T> Iterator for RevRemoveLinkedListSlotMapIterator<'a, T> {
+    type Item = T;
+    fn next(&mut self) -> Option<Self::Item> {
+        let node_handle = self.current_node?;
+
+        let node = self
+            .linked_list_slot_map
+            .slot_map
+            .remove(node_handle)
+            .unwrap();
+        self.current_node = node.previous;
+        Some(node.value)
     }
 }
 
