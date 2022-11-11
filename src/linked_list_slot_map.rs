@@ -5,7 +5,6 @@ pub struct LinkedListSlotMap<T> {
     slot_map: SlotMap<Node<T>>,
 }
 
-#[derive(PartialEq, Eq)]
 pub struct LinkedListSlotMapHandle<T>(pub(crate) SlotMapHandle<Node<T>>);
 
 impl<T> LinkedListSlotMapHandle<T> {
@@ -20,6 +19,14 @@ impl<T> Clone for LinkedListSlotMapHandle<T> {
 }
 
 impl<T> Copy for LinkedListSlotMapHandle<T> {}
+
+impl<T> PartialEq for LinkedListSlotMapHandle<T> {
+    fn eq(&self, other: &Self) -> bool {
+        self.0 == other.0
+    }
+}
+
+impl<T> Eq for LinkedListSlotMapHandle<T> {}
 
 impl<T> LinkedListSlotMap<T> {
     pub fn new() -> Self {
