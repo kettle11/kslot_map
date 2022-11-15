@@ -89,11 +89,11 @@ impl<T> SlotMap<T> {
         }
     }
 
-    pub fn iter<'a>(&'a self) -> impl Iterator<Item = &'a T> {
+    pub fn iter(&self) -> impl Iterator<Item = &T> {
         self.items.iter()
     }
 
-    pub fn iter_mut<'a>(&'a mut self) -> impl Iterator<Item = &'a mut T> {
+    pub fn iter_mut(&mut self) -> impl Iterator<Item = &mut T> {
         self.items.iter_mut()
     }
 
@@ -149,11 +149,14 @@ impl<T> SlotMap<T> {
     }
 
     pub fn remove(&mut self, handle: SlotMapHandle<T>) -> Option<T> {
-        let item_entry = &mut self.indirection_indices.get(handle.indirection_index)?;
+        let item_entry = self.indirection_indices.get_mut(handle.indirection_index)?;
 
         if handle.generation != item_entry.generation {
             return None;
         }
+
+        // Increment to prevent future removes for the same handle from working.
+        item_entry.generation += 1;
 
         let item_index = item_entry.item_index;
         self.indirection_indices[*self.item_to_indirection_index.last().unwrap()].item_index =

@@ -40,9 +40,7 @@ impl<T> LinkedListSlotMap<T> {
         previous: Option<LinkedListSlotMapHandle<T>>,
         value: T,
     ) -> LinkedListSlotMapHandle<T> {
-        let next = previous
-            .map(|p| self.slot_map.get(p.0).unwrap().next)
-            .flatten();
+        let next = previous.and_then(|p| self.slot_map.get(p.0).unwrap().next);
         let new_handle = self.slot_map.push(Node {
             value,
             next,
