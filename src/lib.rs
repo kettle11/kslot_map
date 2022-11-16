@@ -97,6 +97,36 @@ impl<T> SlotMap<T> {
         self.items.iter_mut()
     }
 
+    pub fn iter_with_handle(&self) -> impl Iterator<Item = (&T, SlotMapHandle<T>)> {
+        self.items.iter().enumerate().map(|(index, item)| {
+            let indirection_index = self.item_to_indirection_index[index];
+            let generation = self.indirection_indices[indirection_index].generation;
+            (
+                item,
+                SlotMapHandle {
+                    indirection_index,
+                    generation,
+                    phantom: std::marker::PhantomData,
+                },
+            )
+        })
+    }
+
+    pub fn iter_mut_with_handle(&mut self) -> impl Iterator<Item = (&mut T, SlotMapHandle<T>)> {
+        self.items.iter_mut().enumerate().map(|(index, item)| {
+            let indirection_index = self.item_to_indirection_index[index];
+            let generation = self.indirection_indices[indirection_index].generation;
+            (
+                item,
+                SlotMapHandle {
+                    indirection_index,
+                    generation,
+                    phantom: std::marker::PhantomData,
+                },
+            )
+        })
+    }
+
     pub fn next_handle(&self) -> SlotMapHandle<T> {
         let (indirection_index, generation) =
             if let Some(indirection_index) = self.free_indirection_indices.last() {
