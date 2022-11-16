@@ -103,6 +103,13 @@ impl<T> LinkedListSlotMap<T> {
         ))
     }
 
+    pub fn get_next_handle(
+        &self,
+        handle: LinkedListSlotMapHandle<T>,
+    ) -> Option<LinkedListSlotMapHandle<T>> {
+        Some(LinkedListSlotMapHandle(self.slot_map.get(handle.0)?.next?))
+    }
+
     pub fn reverse_iter(
         &self,
         start_node: LinkedListSlotMapHandle<T>,
