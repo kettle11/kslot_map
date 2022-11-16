@@ -89,6 +89,10 @@ impl<T> SlotMap<T> {
         }
     }
 
+    pub fn len(&self) -> usize {
+        self.items.len()
+    }
+
     pub fn iter(&self) -> impl Iterator<Item = &T> {
         self.items.iter()
     }

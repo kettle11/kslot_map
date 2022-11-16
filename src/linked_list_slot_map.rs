@@ -35,6 +35,10 @@ impl<T> LinkedListSlotMap<T> {
         }
     }
 
+    pub fn len(&self) -> usize {
+        self.slot_map.len()
+    }
+
     pub fn insert(
         &mut self,
         previous: Option<LinkedListSlotMapHandle<T>>,
