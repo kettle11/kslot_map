@@ -79,6 +79,10 @@ impl<T> core::fmt::Debug for SlotMapHandle<T> {
     }
 }
 
+// This is safe because it does not actually contain a T.
+unsafe impl<T> Send for SlotMapHandle<T> {}
+unsafe impl<T> Sync for SlotMapHandle<T> {}
+
 impl<T> SlotMap<T> {
     pub fn new() -> Self {
         Self {
