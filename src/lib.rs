@@ -221,6 +221,29 @@ impl<T> SlotMap<T> {
         self.items.get_mut(entry.item_index)
     }
 
+    /// Mutably access two separate handles.
+    /// Returns (None, None) if handles overlap.
+    pub fn get_mut_twice(
+        &mut self,
+        handle0: SlotMapHandle<T>,
+        handle1: SlotMapHandle<T>,
+    ) -> (Option<&mut T>, Option<&mut T>) {
+        let entry0 = &self.indirection_indices[handle0.indirection_index];
+        let entry1 = &self.indirection_indices[handle1.indirection_index];
+
+        match entry0.item_index.cmp(&entry1.item_index) {
+            std::cmp::Ordering::Less => {
+                let (v0, v1) = self.items.split_at_mut(entry1.item_index);
+                (v0.get_mut(entry0.item_index), v1.get_mut(0))
+            }
+            std::cmp::Ordering::Greater => {
+                let (v0, v1) = self.items.split_at_mut(entry0.item_index);
+                (v1.get_mut(0), v0.get_mut(entry1.item_index))
+            }
+            std::cmp::Ordering::Equal => return (None, None),
+        }
+    }
+
     pub fn get_unchecked_generation(&self, handle: SlotMapHandle<T>) -> Option<&T> {
         let entry = &self.indirection_indices[handle.indirection_index];
         self.items.get(entry.item_index)
