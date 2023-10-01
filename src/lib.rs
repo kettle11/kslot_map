@@ -38,6 +38,13 @@ impl<T> SlotMapHandle<T> {
     }
 }
 
+impl<T> std::hash::Hash for SlotMapHandle<T> {
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+        self.indirection_index.hash(state);
+        self.generation.hash(state);
+    }
+}
+
 impl<T> PartialEq for SlotMapHandle<T> {
     fn eq(&self, other: &Self) -> bool {
         self.indirection_index == other.indirection_index
