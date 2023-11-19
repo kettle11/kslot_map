@@ -212,6 +212,21 @@ impl<T> SlotMap<T> {
         Some(removed_item)
     }
 
+    pub fn remove_unchecked_generation(&mut self, handle: SlotMapHandle<T>) -> Option<T> {
+        let item_entry = self.indirection_indices.get_mut(handle.indirection_index)?;
+
+        // Increment to prevent future removes for the same handle from working.
+        item_entry.generation += 1;
+
+        let item_index = item_entry.item_index;
+        self.indirection_indices[*self.item_to_indirection_index.last().unwrap()].item_index =
+            item_index;
+        let removed_item = self.items.swap_remove(item_index);
+        self.item_to_indirection_index.swap_remove(item_index);
+        self.free_indirection_indices.push(handle.indirection_index);
+        Some(removed_item)
+    }
+
     pub fn get(&self, handle: SlotMapHandle<T>) -> Option<&T> {
         let entry = &self.indirection_indices[handle.indirection_index];
         if entry.generation != handle.generation {
