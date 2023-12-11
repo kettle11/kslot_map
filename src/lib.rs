@@ -4,6 +4,7 @@ mod linked_list_slot_map;
 pub use linked_list_slot_map::*;
 
 /// A data structure designed to efficiently store data with persistent IDs.
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Clone)]
 pub struct SlotMap<T> {
     items: Vec<T>,
@@ -12,12 +13,14 @@ pub struct SlotMap<T> {
     free_indirection_indices: Vec<usize>,
 }
 
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Clone)]
 struct Entry {
     item_index: usize,
     generation: usize,
 }
 
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct SlotMapHandle<T> {
     indirection_index: usize,
     generation: usize,
