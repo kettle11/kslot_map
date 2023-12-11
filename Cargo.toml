@@ -9,4 +9,4 @@ default = ["linked_list_slot_map"]
 linked_list_slot_map = []
 
 [dependencies]
-serde = { version = "1.0.193", default-features = false, optional = true }
+serde = { version = "1.0.193", default-features = false, features=["serde_derive"], optional = true }
